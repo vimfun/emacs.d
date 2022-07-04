@@ -1,40 +1,24 @@
-;;; init.el --- Bozhidar's Emacs configuration
+;;; init.el --- Brian's Emacs configuration
 ;;
-;; Copyright (c) 2016-2022 Bozhidar Batsov
+;; Copyright (c) Brian Wang
 ;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.dev>
-;; URL: https://github.com/bbatsov/emacs.d
-;; Keywords: convenience
+;; Author: Brian Wang <vimfunny@qq.com>
+;; URL: https://github.com/vimfun/emacs.d
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
-;; This is my personal Emacs configuration.  Nothing more, nothing less.
-
-;;; License:
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 3
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; This is my personal Emacs configuration.
 
 ;;; Code:
 
 (require 'package)
-
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives '(("cn-gnu-elpa"     . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("cn-nongnu-elpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+                         ("cn-melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+                         ("cn-melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+                         ("cn-org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 ;; keep the installed packages in .emacs.d
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 (package-initialize)
@@ -42,8 +26,8 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-(setq user-full-name "Bozhidar Batsov"
-      user-mail-address "bozhidar@batsov.com")
+(setq user-full-name "Brian Wang"
+      user-mail-address "vimfunny@qq.com")
 
 ;; Always load newest byte code
 (setq load-prefer-newer t)
@@ -185,17 +169,7 @@
 ;; enable some commands that are disabled by default
 (put 'erase-buffer 'disabled nil)
 
-;; make it possible to navigate to the C source of Emacs functions
 (setq find-function-C-source-directory "~/projects/emacs")
-
-;; auto-create missing folders
-(defun er-auto-create-missing-dirs ()
-  "Make missing parent directories automatically."
-  (let ((target-dir (file-name-directory buffer-file-name)))
-    (unless (file-exists-p target-dir)
-      (make-directory target-dir t))))
-
-(add-to-list 'find-file-not-found-functions #'er-auto-create-missing-dirs)
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -291,8 +265,7 @@
 
 (use-package whitespace
   :init
-  (dolist (hook '(prog-mode-hook text-mode-hook))
-    (add-hook hook #'whitespace-mode))
+  ; (dolist (hook '(prog-mode-hook text-mode-hook)) (add-hook hook #'whitespace-mode))
   (add-hook 'before-save-hook #'whitespace-cleanup)
   :config
   (setq whitespace-line-column 80) ;; limit line length
@@ -354,7 +327,7 @@ Start `ielm' if it's not already running."
 (use-package projectile
   :ensure t
   :init
-  (setq projectile-project-search-path '("~/projects/" "~/work/"))
+  (setq projectile-project-search-path '("~/workspace/"))
   :config
   ;; I typically use this keymap prefix on macOS
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
@@ -362,9 +335,6 @@ Start `ielm' if it's not already running."
   (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
   (global-set-key (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
-
-(use-package pt
-  :ensure t)
 
 (use-package expand-region
   :ensure t
@@ -421,19 +391,25 @@ Start `ielm' if it's not already running."
   (add-hook 'prog-mode-hook #'rainbow-mode)
   (diminish 'rainbow-mode))
 
+(setq evil-want-keybinding nil)
+
+(use-package hideshow
+  :hook (prog-mode . hs-minor-mode)
+  :after evil)
+
 (use-package evil
   :ensure t
   :bind (("C-z" . evil-local-mode)))
 
-(use-package inf-ruby
+(use-package evil-surround
   :ensure t
   :config
-  (add-hook 'ruby-mode-hook #'inf-ruby-minor-mode))
+  (add-hook 'evil-mode-hook #'turn-on-evil-surround-mode))
 
-(use-package ruby-mode
-  :config
-  (setq ruby-insert-encoding-magic-comment nil)
-  (add-hook 'ruby-mode-hook #'subword-mode))
+(use-package evil-collection
+  :ensure t
+  :custom (evil-collection-setup-minibuffer t)
+  :init (evil-collection-init))
 
 (use-package clojure-mode
   :ensure t
@@ -462,6 +438,20 @@ Start `ielm' if it's not already running."
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
+(use-package ob-clojure
+  :config
+  (setq org-babel-clojure-backend 'cider))
+
+(use-package restclient
+  :ensure t)
+
+(use-package ob-restclient
+  :ensure t)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((restclient . t)))
+
 (use-package flycheck-joker
   :ensure t)
 
@@ -470,47 +460,8 @@ Start `ielm' if it's not already running."
   :config
   (add-hook 'elixir-mode #'subword-mode))
 
-(use-package erlang
-  :ensure t
-  :config
-  (when (eq system-type 'windows-nt)
-    (setq erlang-root-dir "C:/Program Files/erl7.2")
-    (add-to-list 'exec-path "C:/Program Files/erl7.2/bin")))
-
-(use-package haskell-mode
-  :ensure t
-  :config
-  (add-hook 'haskell-mode-hook #'subword-mode)
-  (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
-  (add-hook 'haskell-mode-hook #'haskell-doc-mode))
-
-(use-package rust-mode
-  :ensure t)
-
 (use-package eglot
   :ensure t)
-
-;;;; OCaml support
-
-(use-package tuareg
-  :ensure t)
-
-(use-package dune
-  :ensure t)
-
-(use-package flycheck-ocaml
-  :ensure t
-  :config
-  (flycheck-ocaml-setup))
-
-;; Merlin configuration
-(use-package merlin
-  :ensure t
-  :config
-  (add-hook 'tuareg-mode-hook #'merlin-mode)
-  (add-hook 'merlin-mode-hook #'company-mode)
-  ;; we're using flycheck instead
-  (setq merlin-error-after-save nil))
 
 ;; utop configuration
 (use-package utop
@@ -642,14 +593,16 @@ Start `ielm' if it's not already running."
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
 
-(use-package flyspell
-  :config
-  (when (eq system-type 'windows-nt)
-    (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
-  (setq ispell-program-name "aspell" ; use aspell instead of ispell
-        ispell-extra-args '("--sug-mode=ultra"))
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+;; (use-package flyspell
+;;   :config
+;;   (when (eq system-type 'windows-nt)
+;;     (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
+;;   (setq ispell-program-name "aspell"    ; use aspell instead of ispell
+;;         ispell-extra-args '("--sug-mode=ultra"))
+;;   (add-hook 'text-mode-hook #'flyspell-mode)
+;;   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+(use-package gnuplot)
+(use-package gnuplot-mode)
 
 (use-package flycheck
   :ensure t
