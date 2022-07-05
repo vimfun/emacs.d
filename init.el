@@ -162,14 +162,13 @@
 (global-set-key (kbd "s->") #'end-of-buffer)
 (global-set-key (kbd "s-q") #'fill-paragraph)
 (global-set-key (kbd "s-x") #'execute-extended-command)
+(global-set-key (kbd "C-s") 'swiper)
 
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
 
 ;; enable some commands that are disabled by default
 (put 'erase-buffer 'disabled nil)
-
-(setq find-function-C-source-directory "~/projects/emacs")
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -194,7 +193,10 @@
 ;; highlight the current line
 (use-package hl-line
   :config
-  (global-hl-line-mode +1))
+  (global-hl-line-mode 0))
+
+(use-package org
+  :ensure t)
 
 (use-package abbrev
   :config
@@ -293,6 +295,16 @@ Start `ielm' if it's not already running."
   :ensure t
   :config
   (load-theme 'zenburn t))
+
+(use-package leuven-theme
+  :ensure t
+  :config
+  (load-theme 'leuven-dark t))
+
+(use-package jq-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.jq$" . jq-mode)))
 
 (use-package diminish
   :ensure t
@@ -448,9 +460,30 @@ Start `ielm' if it's not already running."
 (use-package ob-restclient
   :ensure t)
 
+(use-package counsel-jq
+  :ensure t)
+
+(use-package plantuml-mode
+  :ensure t
+  :config
+  (setq plantuml-jar-path     (expand-file-name "~/.m2/jars/plantuml-1.2022.6.jar"))
+  (setq org-plantuml-jar-path (expand-file-name "~/.m2/jars/plantuml-1.2022.6.jar"))
+  )
+
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((restclient . t)))
+ '((java       . t)
+   (plantuml   . t)
+   (restclient . t)
+   (shell      . t)))
+
+(setq org-confirm-babel-evaluate t)
+
+(use-package color
+  :config
+  (set-face-attribute 'org-block nil
+                      :background (color-darken-name
+                                   (face-attribute 'default :background) 3)))
 
 (use-package flycheck-joker
   :ensure t)
