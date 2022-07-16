@@ -175,6 +175,7 @@
 
 (require 'use-package)
 (setq use-package-verbose t)
+(setq use-package-always-ensure t)
 
 ;;; built-in packages
 (use-package paren
@@ -196,7 +197,10 @@
   (global-hl-line-mode 0))
 
 (use-package org
-  :ensure t)
+  :config
+  (setq org-startup-indented t))
+
+(setq display-line-numbers 'visual)
 
 (use-package abbrev
   :config
@@ -265,6 +269,8 @@
   ;; enable some really cool extensions like C-x C-j(dired-jump)
   (require 'dired-x))
 
+(use-package ranger)
+
 (use-package whitespace
   :init
   ; (dolist (hook '(prog-mode-hook text-mode-hook)) (add-hook hook #'whitespace-mode))
@@ -292,22 +298,25 @@ Start `ielm' if it's not already running."
 
 ;;; third-party packages
 (use-package zenburn-theme
-  :ensure t
   :config
   (load-theme 'zenburn t))
 
-(use-package leuven-theme
-  :ensure t
+(use-package mindre-theme
+  :custom
+  (mindre-use-more-bold nil)
+  (mindre-use-faded-lisp-parens t)
   :config
-  (load-theme 'leuven-dark t))
+  (load-theme 'mindre t))
+
+(use-package leuven-theme
+  :config
+  (load-theme 'leuven t))
 
 (use-package jq-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.jq$" . jq-mode)))
 
 (use-package diminish
-  :ensure t
   :config
   (diminish 'abbrev-mode)
   (diminish 'flyspell-mode)
@@ -315,7 +324,6 @@ Start `ielm' if it's not already running."
   (diminish 'eldoc-mode))
 
 (use-package avy
-  :ensure t
   :bind (("s-." . avy-goto-word-or-subword-1)
          ("s-," . avy-goto-char)
          ("C-c ." . avy-goto-word-or-subword-1)
@@ -326,18 +334,14 @@ Start `ielm' if it's not already running."
   (setq avy-background t))
 
 (use-package magit
-  :ensure t
   :bind (("C-x g" . magit-status)))
 
 (use-package git-timemachine
-  :ensure t
   :bind (("s-g" . git-timemachine)))
 
-(use-package ag
-  :ensure t)
+(use-package ag)
 
 (use-package projectile
-  :ensure t
   :init
   (setq projectile-project-search-path '("~/workspace/"))
   :config
@@ -349,18 +353,15 @@ Start `ielm' if it's not already running."
   (projectile-mode +1))
 
 (use-package expand-region
-  :ensure t
   :bind ("C-=" . er/expand-region))
 
 (use-package elisp-slime-nav
-  :ensure t
   :config
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook #'elisp-slime-nav-mode))
   (diminish 'elisp-slime-nav-mode))
 
 (use-package paredit
-  :ensure t
   :config
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   ;; enable in the *scratch* buffer
@@ -371,34 +372,28 @@ Start `ielm' if it's not already running."
   (diminish 'paredit-mode "()"))
 
 (use-package anzu
-  :ensure t
   :bind (("M-%" . anzu-query-replace)
          ("C-M-%" . anzu-query-replace-regexp))
   :config
   (global-anzu-mode))
 
 (use-package easy-kill
-  :ensure t
   :config
   (global-set-key [remap kill-ring-save] 'easy-kill))
 
 (use-package exec-path-from-shell
-  :ensure t
   :config
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
 (use-package move-text
-  :ensure t
   :bind
   (([(meta shift up)] . move-text-up)
    ([(meta shift down)] . move-text-down)))
 
-(use-package rainbow-delimiters
-  :ensure t)
+(use-package rainbow-delimiters)
 
 (use-package rainbow-mode
-  :ensure t
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode)
   (diminish 'rainbow-mode))
@@ -410,21 +405,17 @@ Start `ielm' if it's not already running."
   :after evil)
 
 (use-package evil
-  :ensure t
   :bind (("C-z" . evil-local-mode)))
 
 (use-package evil-surround
-  :ensure t
   :config
   (add-hook 'evil-mode-hook #'turn-on-evil-surround-mode))
 
 (use-package evil-collection
-  :ensure t
   :custom (evil-collection-setup-minibuffer t)
   :init (evil-collection-init))
 
 (use-package clojure-mode
-  :ensure t
   :config
   ;; teach clojure-mode about some macros that I use on projects like
   ;; nREPL and Orchard
@@ -438,46 +429,45 @@ Start `ielm' if it's not already running."
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package inf-clojure
-  :ensure t
   :config
   (add-hook 'inf-clojure-mode-hook #'paredit-mode)
   (add-hook 'inf-clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package cider
-  :ensure t
   :config
   (setq nrepl-log-messages t)
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package ob-clojure
   :config
   (setq org-babel-clojure-backend 'cider))
 
-(use-package restclient
-  :ensure t)
+(use-package restclient)
+(use-package ob-restclient)
 
-(use-package ob-restclient
-  :ensure t)
+(use-package counsel-jq)
 
-(use-package counsel-jq
-  :ensure t)
-
-(use-package plantuml-mode
-  :ensure t
+(use-package org-superstar
   :config
-  (setq plantuml-jar-path     (expand-file-name "~/.m2/jars/plantuml-1.2022.6.jar"))
-  (setq org-plantuml-jar-path (expand-file-name "~/.m2/jars/plantuml-1.2022.6.jar"))
-  )
+  (setq org-startup-indented t)
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((java       . t)
+ '((clojure    . t)
+   (gnuplot    . t)
+   (java       . t)
    (plantuml   . t)
+   (python     . t)
    (restclient . t)
    (shell      . t)))
 
-(setq org-confirm-babel-evaluate t)
+(setq org-confirm-babel-evaluate nil)
 
 (use-package color
   :config
@@ -485,27 +475,22 @@ Start `ielm' if it's not already running."
                       :background (color-darken-name
                                    (face-attribute 'default :background) 3)))
 
-(use-package flycheck-joker
-  :ensure t)
+(use-package flycheck-joker)
 
 (use-package elixir-mode
-  :ensure t
   :config
   (add-hook 'elixir-mode #'subword-mode))
 
-(use-package eglot
-  :ensure t)
+(use-package eglot)
 
 ;; utop configuration
 (use-package utop
-  :ensure t
   :config
   (add-hook 'tuareg-mode-hook #'utop-minor-mode))
 
 ;;;; Markup languages support
 
 (use-package web-mode
-  :ensure t
   :custom
   (web-mode-markup-indent-offset 2)
   (web-mode-css-indent-offset 2)
@@ -516,7 +501,6 @@ Start `ielm' if it's not already running."
   (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode)))
 
 (use-package markdown-mode
-  :ensure t
   :mode (("\\.md\\'" . gfm-mode)
          ("\\.markdown\\'" . gfm-mode))
   :config
@@ -538,28 +522,22 @@ Start `ielm' if it's not already running."
         (insert (format "{%% post_url %s %%}" selected-file))))))
 
 (use-package adoc-mode
-  :ensure t
   :mode "\\.adoc\\'")
 
-(use-package yaml-mode
-  :ensure t)
+(use-package yaml-mode)
 
-(use-package cask-mode
-  :ensure t)
+(use-package cask-mode)
 
 (use-package selectrum
-  :ensure t
   :config
   (selectrum-mode +1))
 
 (use-package selectrum-prescient
-  :ensure t
   :config
   (selectrum-prescient-mode +1)
   (prescient-persist-mode +1))
 
 (use-package consult
-  :ensure t
   :bind (
          ;; C-x bindings (ctl-x-map)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
@@ -596,7 +574,6 @@ Start `ielm' if it's not already running."
          ("M-s u" . consult-focus-lines)))
 
 (use-package company
-  :ensure t
   :config
   (setq company-idle-delay 0.5)
   (setq company-show-numbers t)
@@ -610,19 +587,16 @@ Start `ielm' if it's not already running."
   (diminish 'company-mode))
 
 (use-package hl-todo
-  :ensure t
   :config
   (setq hl-todo-highlight-punctuation ":")
   (global-hl-todo-mode))
 
 (use-package zop-to-char
-  :ensure t
   :bind (("M-z" . zop-up-to-char)
          ("M-Z" . zop-to-char)))
 
 ;; TODO: can be removed in favor of consult
 (use-package imenu-anywhere
-  :ensure t
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
 
@@ -636,17 +610,19 @@ Start `ielm' if it's not already running."
 ;;   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 (use-package gnuplot)
 (use-package gnuplot-mode)
+(use-package plantuml-mode
+  :config
+  (setq plantuml-jar-path     (expand-file-name "~/.m2/jars/plantuml-1.2022.6.jar"))
+  (setq org-plantuml-jar-path (expand-file-name "~/.m2/jars/plantuml-1.2022.6.jar"))
+  )
 
 (use-package flycheck
-  :ensure t
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
-(use-package flycheck-eldev
-  :ensure t)
+(use-package flycheck-eldev)
 
 (use-package super-save
-  :ensure t
   :config
   ;; add integration with ace-window
   (add-to-list 'super-save-triggers 'ace-window)
@@ -654,7 +630,6 @@ Start `ielm' if it's not already running."
   (diminish 'super-save-mode))
 
 (use-package crux
-  :ensure t
   :bind (("C-c o" . crux-open-with)
          ("M-o" . crux-smart-open-line)
          ("C-c n" . crux-cleanup-buffer-or-region)
@@ -683,20 +658,17 @@ Start `ielm' if it's not already running."
          ("C-c s" . crux-ispell-word-then-abbrev)))
 
 (use-package diff-hl
-  :ensure t
   :config
   (global-diff-hl-mode +1)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (use-package which-key
-  :ensure t
   :config
   (which-key-mode +1)
   (diminish 'which-key-mode))
 
 (use-package undo-tree
-  :ensure t
   :config
   ;; autosave the undo-tree history
   (setq undo-tree-history-directory-alist
@@ -706,14 +678,12 @@ Start `ielm' if it's not already running."
   (diminish 'undo-tree-mode))
 
 (use-package ace-window
-  :ensure t
   :config
   (global-set-key (kbd "s-w") 'ace-window)
   (global-set-key [remap other-window] 'ace-window))
 
 ;; FIXME: Figure out why the vterm module stopped compiling properly
 ;; (use-package vterm
-;;   :ensure t
 ;;   :config
 ;;   (setq vterm-shell "/bin/bash")
 ;;   ;; macOS
@@ -722,11 +692,9 @@ Start `ielm' if it's not already running."
 ;;   (global-set-key (kbd "C-c v") 'vterm))
 
 ;; super useful for demos
-(use-package keycast
-  :ensure t)
+(use-package keycast)
 
 (use-package gif-screencast
-  :ensure t
   :config
   ;; To shut up the shutter sound of `screencapture' (see `gif-screencast-command').
   (setq gif-screencast-args '("-x"))
@@ -737,7 +705,6 @@ Start `ielm' if it's not already running."
 
 ;; temporarily highlight changes from yanking, etc
 (use-package volatile-highlights
-  :ensure t
   :config
   (volatile-highlights-mode +1)
   (diminish 'volatile-highlights-mode))
