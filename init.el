@@ -54,6 +54,9 @@
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 
+(when (fboundp 'menu-bar-mode)
+  (menu-bar-mode -1))
+
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
 
@@ -203,11 +206,13 @@
 (setq display-line-numbers 'visual)
 
 (use-package abbrev
+  :ensure nil
   :config
   (setq save-abbrevs 'silently)
   (setq-default abbrev-mode t))
 
 (use-package uniquify
+  :ensure nil
   :config
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-separator "/")
@@ -254,6 +259,7 @@
   (windmove-default-keybindings))
 
 (use-package dired
+  :ensure nil
   :config
   ;; dired - reuse current buffer by pressing 'a'
   (put 'dired-find-alternate-file 'disabled nil)
@@ -280,6 +286,7 @@
   (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
 (use-package lisp-mode
+  :ensure nil
   :config
   (defun bozhidar-visit-ielm ()
     "Switch to default `ielm' buffer.
@@ -297,20 +304,12 @@ Start `ielm' if it's not already running."
   (add-hook 'ielm-mode-hook #'rainbow-delimiters-mode))
 
 ;;; third-party packages
-(use-package zenburn-theme
-  :config
-  (load-theme 'zenburn t))
+(use-package zenburn-theme)
+(use-package afternoon-theme)
+(use-package leuven-theme)
+(use-package moe-theme)
 
-(use-package mindre-theme
-  :custom
-  (mindre-use-more-bold nil)
-  (mindre-use-faded-lisp-parens t)
-  :config
-  (load-theme 'mindre t))
-
-(use-package leuven-theme
-  :config
-  (load-theme 'leuven t))
+(load-theme 'wheatgrass)
 
 (use-package jq-mode
   :config
@@ -343,7 +342,8 @@ Start `ielm' if it's not already running."
 
 (use-package projectile
   :init
-  (setq projectile-project-search-path '("~/workspace/"))
+  (setq projectile-project-search-path (seq-filter #'file-exists-p
+                                                   '("~/workspace/" "~/spt/" "~/.emacs.d/")))
   :config
   ;; I typically use this keymap prefix on macOS
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
@@ -372,10 +372,11 @@ Start `ielm' if it's not already running."
   (diminish 'paredit-mode "()"))
 
 (use-package anzu
+  :diminish t
   :bind (("M-%" . anzu-query-replace)
          ("C-M-%" . anzu-query-replace-regexp))
   :config
-  (global-anzu-mode))
+  (global-anzu-mode +1))
 
 (use-package easy-kill
   :config
@@ -395,17 +396,31 @@ Start `ielm' if it's not already running."
 
 (use-package rainbow-mode
   :config
-  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (add-hook 'prog-mode-hook (lambda ()
+                              (rainbow-mode)))
   (diminish 'rainbow-mode))
 
 (setq evil-want-keybinding nil)
 
 (use-package hideshow
   :hook (prog-mode . hs-minor-mode)
-  :after evil)
+  :after evil
+  :config
+  (diminish 'hs-minor-mode))
 
 (use-package evil
-  :bind (("C-z" . evil-local-mode)))
+  :bind (("C-z" . evil-local-mode))
+  :config
+  (add-hook 'text-mode-hook (lambda ()
+                              (evil-local-mode)
+                              (setq truncate-lines t)
+                              (setq display-line-numbers 'visual)
+                              (setq evil-symbol-word-search t)))
+  (add-hook 'prog-mode-hook (lambda ()
+                              (evil-local-mode)
+                              (setq truncate-lines t)
+                              (setq display-line-numbers 'visual)
+                              (setq evil-symbol-word-search t))))
 
 (use-package evil-surround
   :config
@@ -443,12 +458,15 @@ Start `ielm' if it's not already running."
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
-(use-package ob-clojure
-  :config
-  (setq org-babel-clojure-backend 'cider))
-
 (use-package restclient)
 (use-package ob-restclient)
+(use-package typescript-mode) ;; For javascript and typescript
+(use-package ob-deno)         ;; For javascript and typescript
+(use-package ob-graphql)
+(use-package ob-elixir)
+(use-package ob-go)
+(use-package ob-prolog)
+(use-package ob-rust)
 
 (use-package counsel-jq)
 
@@ -459,22 +477,30 @@ Start `ielm' if it's not already running."
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((clojure    . t)
+ '((deno       . t)
+   (clojure    . t)
+   (elixir     . t)
    (gnuplot    . t)
+   (go         . t)
    (java       . t)
    (plantuml   . t)
+   (prolog     . t)
    (python     . t)
    (restclient . t)
+   (rust       . t)
    (shell      . t)))
 
+(add-to-list 'org-src-lang-modes '("deno" . typescript))
+
 (setq org-confirm-babel-evaluate nil)
+(setq org-babel-clojure-backend 'cider)
 
-(use-package color
-  :config
-  (set-face-attribute 'org-block nil
-                      :background (color-darken-name
-                                   (face-attribute 'default :background) 3)))
-
+; (use-package color
+;   :config
+;   (set-face-attribute 'org-block nil
+;                       :background (color-darken-name
+;                                    (face-attribute 'default :background) 2)))
+;
 (use-package flycheck-joker)
 
 (use-package elixir-mode
@@ -617,10 +643,12 @@ Start `ielm' if it's not already running."
   )
 
 (use-package flycheck
+  :diminish t
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
-(use-package flycheck-eldev)
+(use-package flycheck-eldev
+  :diminish t)
 
 (use-package super-save
   :config
