@@ -423,6 +423,7 @@ Start `ielm' if it's not already running."
                               (setq evil-symbol-word-search t))))
 
 (use-package evil-surround
+  :after evil
   :config
   (add-hook 'evil-mode-hook #'turn-on-evil-surround-mode))
 
@@ -474,6 +475,8 @@ Start `ielm' if it's not already running."
   :config
   (setq org-startup-indented t)
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+
+(use-package org-super-agenda)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -737,47 +740,21 @@ Start `ielm' if it's not already running."
   (volatile-highlights-mode +1)
   (diminish 'volatile-highlights-mode))
 
-;; WSL-specific setup
-(when (and (eq system-type 'gnu/linux)
-           (getenv "WSLENV"))
+;; term
+(use-package vterm)
+(use-package multi-vterm)
 
-  ;; pgtk is only available in Emacs 29+
-  ;; without it Emacs fonts don't scale properly on
-  ;; HiDPI display
-  (when (< emacs-major-version 29)
-    (set-frame-font "Cascadia Code 28"))
-
-  ;; Teach Emacs how to open links in your default Windows browser
-  (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
-        (cmd-args '("/c" "start")))
-    (when (file-exists-p cmd-exe)
-      (setq browse-url-generic-program  cmd-exe
-            browse-url-generic-args     cmd-args
-            browse-url-browser-function 'browse-url-generic
-            search-web-default-browser 'browse-url-generic))))
-
-;; Windows-specific setup
-(when (eq system-type 'windows-nt)
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
-
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
-
-  (setq w32-pass-apps-to-system nil)
-  (setq w32-apps-modifier 'hyper) ; Menu/App key
-
-  (set-frame-font "Source Code Pro 12")
-  (add-to-list 'exec-path "C:/Program Files/Git/bin")
-  (add-to-list 'exec-path "C:/Program Files/Git/mingw64/bin")
-  (setenv "PATH" (concat "C:/Program Files/Git/bin;" "C:/Program Files/Git/mingw64/bin;" (getenv "PATH")))
-  ;; needed for arc-mode
-  (add-to-list 'exec-path "C:/Program Files/7-Zip"))
-
-;; config changes made through the customize UI will be stored here
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-
-(when (file-exists-p custom-file)
-  (load custom-file))
+;; Java
+(use-package yasnippet :config (yas-global-mode))
+; (use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration))
+;   :config (setq lsp-completion-enable-additional-text-edit nil))
+; (use-package hydra)
+; (use-package lsp-ui)
+; (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+; (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+; (use-package dap-java :ensure nil)
+; (use-package helm-lsp)
+; (use-package helm :config (helm-mode))
+; (use-package lsp-treemacs)
 
 ;;; init.el ends here
