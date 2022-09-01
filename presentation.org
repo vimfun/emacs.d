@@ -1,0 +1,86 @@
+#+title: How to Give Presentations with Org Mode
+#+author: Vimfun
+
+* Why?
+ * No need for complicated presentation software
+ * Impress and/or confuse your coworkers
+ * Because it's fun!
+
+
+#+begin_src restclient
+  GET https://testucontent-cms.unipus.cn/media/audio/upload?filekeys=%3Bedx%2Fcourse-v2%3AUnipus%2BX006%2B20220728%2Fresource%2Faudio%2Fa2c6ea2cecc027df16bed1de6e5c75f8af17854b.mp3
+  &title=&scope=&scopeid=&courseid=course-v2%3AUnipus%2BX006%2B20220728&_=1661249303441'
+  Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
+  Referer: https://testucontent-cms.unipus.cn/upcstatic/resource/upload.html?uploadType=audio&courseid=course-v2%3AUnipus%2BX006%2B20220728&openid=&ism4a=0
+  Cookie: AFsyuFERGolRTTwfegrggT=3869e448c2d40fd71e948ee729b439b9; FZ_STROAGE.unipus.cn=eyJTRUVTSU9OSUQiOiI4MDdlOTVhZDg4Mjc3YjNlIiwiU0VFU0lPTkRBVEUiOjE2NDIwNTk2ODM5NjcsIkFOU0FQUElEIjoiMzAwYzEzZTYzNmYxN2QwMiIsIkFOUyRERUJVRyI6MCwiQU5TVVBMT0FEVVJMIjoiaHR0cHM6Ly9hcmdvLnhib25nYm9uZy5jb20vIiwiRlJJU1REQVkiOiIyMDIxMTIxNCIsIkZSSVNUSU1FIjpmYWxzZSwiQVJLX0lEIjoiSlMwN2NmNGIyNmJjN2I3NDVmYzQxMjMxMGY5YmNlMzE2YTA3Y2YiLCJBUktGUklTVFBST0ZJTEUiOiIyMDIxLTEyLTE0IDEwOjM3OjU5LjMyMyJ9; ARK_ID=JS07cf4b26bc7b745fc412310f9bce316a07cf; Hm_lvt_a81d782282ea832253b95c12ba570ebd=1649227937; Hm_lvt_c506fe73dce80bfed5c80ad4578a1bff=1649227937; UCANPUS_DNSIP_11205=192.160.1.76; __env_tested__FF=1652077623775; testUCANPUS_DNSIP_11205=; Y1vJ4IdorMglXdNk="9SPDNhE3e4I2JCcN0S+InqaZfqL6i9IYLCbZAhbhuos="; SSOExpireTime=1661256043; sessionid=6dpem6ygnqgi5w650vomcc92pp879g11
+#+end_src
+
+#+begin_src restclient
+  GET https://testucontent-cms.unipus.cn/media/audio/upload?filekeys=%3Bedx%2Fcourse-v2%3AUnipus%2BX006%2B20220728%2Fresource%2Faudio%2Fa2c6ea2cecc027df16bed1de6e5c75f8af17854b.mp3&title=&scope=&scopeid=&courseid=course-v2%3AUnipus%2BX006%2B20220728&_=1661249303441'
+  Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
+  Referer: https://testucontent-cms.unipus.cn/upcstatic/resource/upload.html?uploadType=audio&courseid=course-v2%3AUnipus%2BX006%2B20220728&openid=&ism4a=0
+  Cookie: AFsyuFERGolRTTwfegrggT=3869e448c2d40fd71e948ee729b439b9; FZ_STROAGE.unipus.cn=eyJTRUVTSU9OSUQiOiI4MDdlOTVhZDg4Mjc3YjNlIiwiU0VFU0lPTkRBVEUiOjE2NDIwNTk2ODM5NjcsIkFOU0FQUElEIjoiMzAwYzEzZTYzNmYxN2QwMiIsIkFOUyRERUJVRyI6MCwiQU5TVVBMT0FEVVJMIjoiaHR0cHM6Ly9hcmdvLnhib25nYm9uZy5jb20vIiwiRlJJU1REQVkiOiIyMDIxMTIxNCIsIkZSSVNUSU1FIjpmYWxzZSwiQVJLX0lEIjoiSlMwN2NmNGIyNmJjN2I3NDVmYzQxMjMxMGY5YmNlMzE2YTA3Y2YiLCJBUktGUklTVFBST0ZJTEUiOiIyMDIxLTEyLTE0IDEwOjM3OjU5LjMyMyJ9; ARK_ID=JS07cf4b26bc7b745fc412310f9bce316a07cf; Hm_lvt_a81d782282ea832253b95c12ba570ebd=1649227937; Hm_lvt_c506fe73dce80bfed5c80ad4578a1bff=1649227937; UCANPUS_DNSIP_11205=192.160.1.76; __env_tested__FF=1652077623775; testUCANPUS_DNSIP_11205=; Y1vJ4IdorMglXdNk="9SPDNhE3e4I2JCcN0S+InqaZfqL6i9IYLCbZAhbhuos="; SSOExpireTime=1661256043; sessionid=6dpem6ygnqgi5w650vomcc92pp879g11
+#+end_src
+
+#+RESULTS:
+#+BEGIN_SRC js
+  {"msg": "成功", "items": [{"filetype": "audio/mp3", "filetoken":
+   "VQtDh9gJI_0SnQ9GhNPhdYHrd7SYjs4NMAKbSaOH:YJR8YtGzUt8j_ZvAfHnlLH4frkk=:eyJwZXJzaXN0ZW50UGlwZWxpbmUiOiJlZHhtZWRpYTEtcGlwbGluZSIsInBlcnNpc3RlbnRPcHMiOiJhdnRodW1iL21wMy9hYi85NmsvYXIvNDQxMDAvYWNvZGVjL2xpYm1wM2xhbWV8c2F2ZWFzL1pXUjRiV1ZrYVdFNlpXUjRMMk52ZFhKelpTMTJNanBWYm1sd2RYTXJXREF3TmlzeU1ESXlNRGN5T0M5eVpYTnZkWEpqWlM5aGRXUnBieTloTW1NMlpXRXlZMlZqWXpBeU4yUm1NVFppWldReFpHVTJaVFZqTnpWbU9HRm1NVGM0TlRSaVh6azJheTV0Y0RNPSIsInNhdmVLZXkiOiJlZHgvY291cnNlLXYyOlVuaXB1cytYMDA2KzIwMjIwNzI4L3Jlc291cmNlL2F1ZGlvL2EyYzZlYTJjZWNjMDI3ZGYxNmJlZDFkZTZlNWM3NWY4YWYxNzg1NGIubXAzIiwibWltZUxpbWl0IjoiYXVkaW8vKjthcHBsaWNhdGlvbi9vY3RldC1zdHJlYW0iLCJwZXJzaXN0ZW50Tm90aWZ5VXJsIjoiaHR0cDovL3VuaXB1cy1odHRwLXRlc3QtMTk1OTA2ODM3Mi5jbi1ub3J0aHdlc3QtMS5lbGIuYW1hem9uYXdzLmNvbS5jbi9tZWRpYS9hdWRpby9wY2IiLCJkZXRlY3RNaW1lIjoxLCJkZWFkbGluZSI6MTY2MTI1MjkzMCwic2NvcGUiOiJlZHhtZWRpYTplZHgvY291cnNlLXYyOlVuaXB1cytYMDA2KzIwMjIwNzI4L3Jlc291cmNlL2F1ZGlvL2EyYzZlYTJjZWNjMDI3ZGYxNmJlZDFkZTZlNWM3NWY4YWYxNzg1NGIubXAzIiwiY2FsbGJhY2tCb2R5IjoiZmlsZW5hbWU9JChmbmFtZSkmZmlsZWtleT0kKGtleSkmZmlsZXNpemU9JChmc2l6ZSkmZmlsZWhhc2g9JChldGFnKSZmaWxldHlwZT0kKG1pbWVUeXBlKSZwZXJzaXN0ZW50aWQ9JChwZXJzaXN0ZW50SWQpJmF2aW5mbz0kKGF2aW5mbykiLCJjYWxsYmFja1VybCI6Imh0dHA6Ly91bmlwdXMtaHR0cC10ZXN0LTE5NTkwNjgzNzIuY24tbm9ydGh3ZXN0LTEuZWxiLmFtYXpvbmF3cy5jb20uY24vbWVkaWEvYXVkaW8vdWNiIn0=",
+   "originalkey":
+   "edx/course-v2:Unipus+X006+20220728/resource/audio/a2c6ea2cecc027df16bed1de6e5c75f8af17854b.mp3",
+   "screenshots": null, "id": 241382, "filehash": "FmJQSXVx7O5bPZB_Ez1_chE7bead",
+   "title": "", "courseid": "course-v2:Unipus+X006+20220728", "filename":
+   "u5.mp3", "scopeid": "", "filesize": 2945609, "persistentinfo": null, "m4akey":
+   "", "persistentid": "z1.01z113cmdbqnwvcdju00mu0k3y0009ei", "bucketname":
+   "edxmedia", "openid": null, "persistentcode": 0, "m4acode": -1, "avinfo":
+   "{\"AttachedPic\":null,\"Audios\":[{\"Disposition\":{\"attached_pic\":0},\"avg_frame_rate\":\"0/0\",\"bit_rate\":\"64000\",\"channels\":1,\"codec_long_name\":\"MP3
+   (MPEG audio layer
+   3)\",\"codec_name\":\"mp3\",\"codec_time_base\":\"1/44100\",\"codec_type\":\"audio\",\"duration\":\"368.169796\",\"index\":0,\"nb_frames\":\"\",\"profile\":\"\",\"r_frame_rate\":\"0/0\",\"sample_fmt\":\"s16p\",\"sample_rate\":\"44100\",\"start_time\":\"0.025057\",\"tags\":{}}],\"MaxAB\":64000,\"Subtitles\":null,\"Videos\":null,\"audio\":{\"Disposition\":{\"attached_pic\":0},\"avg_frame_rate\":\"0/0\",\"bit_rate\":\"64000\",\"channels\":1,\"codec_long_name\":\"MP3
+   (MPEG audio layer
+   3)\",\"codec_name\":\"mp3\",\"codec_time_base\":\"1/44100\",\"codec_type\":\"audio\",\"duration\":\"368.169796\",\"index\":0,\"nb_frames\":\"\",\"profile\":\"\",\"r_frame_rate\":\"0/0\",\"sample_fmt\":\"s16p\",\"sample_rate\":\"44100\",\"start_time\":\"0.025057\",\"tags\":{}},\"format\":{\"bit_rate\":\"64005\",\"duration\":\"368.169796\",\"format_long_name\":\"MP2/3
+   (MPEG audio layer
+   2/3)\",\"format_name\":\"mp3\",\"nb_streams\":1,\"size\":\"2945609\",\"start_time\":\"0.025057\",\"tags\":{}},\"subtitle\":null,\"video\":null}",
+   "scope": "", "mp3code": 0, "filekey":
+   "edx/course-v2:Unipus+X006+20220728/resource/audio/a2c6ea2cecc027df16bed1de6e5c75f8af17854b_96k.mp3",
+   "userid": "resource", "pubtime": "2022-08-23 18:08:50"}], "code": 200} // GET
+   https://testucontent-cms.unipus.cn/media/audio/upload?filekeys=%3Bedx%2Fcourse-v2%3AUnipus%2BX006%2B20220728%2Fresource%2Faudio%2Fa2c6ea2cecc027df16bed1de6e5c75f8af17854b.mp3&title=&scope=&scopeid=&courseid=course-v2%3AUnipus%2BX006%2B20220728&_=1661249303441'
+   // HTTP/1.1 200 OK // Date: Tue, 23 Aug 2022 10:21:46 GMT // Content-Type:
+   application/json // Transfer-Encoding: chunked // Connection: keep-alive //
+   Vary: Accept-Encoding // X-Frame-Options: SAMEORIGIN // Server: nginx //
+   X-UA-Compatible: IE=edge,chrome=1 // Request duration: 0.674273s
+#+END_SRC
+
+#+begin_src js
+  {"msg": "\u6210\u529f",
+   "items": [{"filetype": "audio/mpeg",
+              "filetoken": "VQtDh9gJI_0SnQ9GhNPhdYHrd7SYjs4NMAKbSaOH:YJR8YtGzUt8j_ZvAfHnlLH4frkk=:eyJwZXJzaXN0ZW50UGlwZWxpbmUiOiJlZHhtZWRpYTEtcGlwbGluZSIsInBlcnNpc3RlbnRPcHMiOiJhdnRodW1iL21wMy9hYi85NmsvYXIvNDQxMDAvYWNvZGVjL2xpYm1wM2xhbWV8c2F2ZWFzL1pXUjRiV1ZrYVdFNlpXUjRMMk52ZFhKelpTMTJNanBWYm1sd2RYTXJXREF3TmlzeU1ESXlNRGN5T0M5eVpYTnZkWEpqWlM5aGRXUnBieTloTW1NMlpXRXlZMlZqWXpBeU4yUm1NVFppWldReFpHVTJaVFZqTnpWbU9HRm1NVGM0TlRSaVh6azJheTV0Y0RNPSIsInNhdmVLZXkiOiJlZHgvY291cnNlLXYyOlVuaXB1cytYMDA2KzIwMjIwNzI4L3Jlc291cmNlL2F1ZGlvL2EyYzZlYTJjZWNjMDI3ZGYxNmJlZDFkZTZlNWM3NWY4YWYxNzg1NGIubXAzIiwibWltZUxpbWl0IjoiYXVkaW8vKjthcHBsaWNhdGlvbi9vY3RldC1zdHJlYW0iLCJwZXJzaXN0ZW50Tm90aWZ5VXJsIjoiaHR0cDovL3VuaXB1cy1odHRwLXRlc3QtMTk1OTA2ODM3Mi5jbi1ub3J0aHdlc3QtMS5lbGIuYW1hem9uYXdzLmNvbS5jbi9tZWRpYS9hdWRpby9wY2IiLCJkZXRlY3RNaW1lIjoxLCJkZWFkbGluZSI6MTY2MTI1MjkzMCwic2NvcGUiOiJlZHhtZWRpYTplZHgvY291cnNlLXYyOlVuaXB1cytYMDA2KzIwMjIwNzI4L3Jlc291cmNlL2F1ZGlvL2EyYzZlYTJjZWNjMDI3ZGYxNmJlZDFkZTZlNWM3NWY4YWYxNzg1NGIubXAzIiwiY2FsbGJhY2tCb2R5IjoiZmlsZW5hbWU9JChmbmFtZSkmZmlsZWtleT0kKGtleSkmZmlsZXNpemU9JChmc2l6ZSkmZmlsZWhhc2g9JChldGFnKSZmaWxldHlwZT0kKG1pbWVUeXBlKSZwZXJzaXN0ZW50aWQ9JChwZXJzaXN0ZW50SWQpJmF2aW5mbz0kKGF2aW5mbykiLCJjYWxsYmFja1VybCI6Imh0dHA6Ly91bmlwdXMtaHR0cC10ZXN0LTE5NTkwNjgzNzIuY24tbm9ydGh3ZXN0LTEuZWxiLmFtYXpvbmF3cy5jb20uY24vbWVkaWEvYXVkaW8vdWNiIn0=",
+              "originalkey": "edx/course-v2:Unipus+X006+20220728/resource/audio/a2c6ea2cecc027df16bed1de6e5c75f8af17854b.mp3",
+              "screenshots": null,
+              "id": 241382,
+              "filehash": "FmJQSXVx7O5bPZB_Ez1_chE7bead",
+              "title": "",
+              "courseid": "course-v2:Unipus+X006+20220728",
+              "filename": "u5.mp3",
+              "scopeid": "",
+              "filesize": 2945609,
+              "persistentinfo": null,
+              "m4akey": "",
+              "persistentid": "z1.01z113cmdbqnwvcdju00mu0k3y0009ei",
+              "bucketname": "edxmedia",
+              "openid": null,
+              "persistentcode": -1,
+              "m4acode": -1,
+              "avinfo": "{\"AttachedPic\":null,\"Audios\":[{\"Disposition\":{\"attached_pic\":0},\"avg_frame_rate\":\"0/0\",\"bit_rate\":\"64000\",\"channels\":1,\"codec_long_name\":\"MP3 (MPEG audio layer 3)\",\"codec_name\":\"mp3\",\"codec_time_base\":\"1/44100\",\"codec_type\":\"audio\",\"duration\":\"368.169796\",\"index\":0,\"nb_frames\":\"\",\"profile\":\"\",\"r_frame_rate\":\"0/0\",\"sample_fmt\":\"s16p\",\"sample_rate\":\"44100\",\"start_time\":\"0.025057\",\"tags\":{}}],\"MaxAB\":64000,\"Subtitles\":null,\"Videos\":null,\"audio\":{\"Disposition\":{\"attached_pic\":0},\"avg_frame_rate\":\"0/0\",\"bit_rate\":\"64000\",\"channels\":1,\"codec_long_name\":\"MP3 (MPEG audio layer 3)\",\"codec_name\":\"mp3\",\"codec_time_base\":\"1/44100\",\"codec_type\":\"audio\",\"duration\":\"368.169796\",\"index\":0,\"nb_frames\":\"\",\"profile\":\"\",\"r_frame_rate\":\"0/0\",\"sample_fmt\":\"s16p\",\"sample_rate\":\"44100\",\"start_time\":\"0.025057\",\"tags\":{}},\"format\":{\"bit_rate\":\"64005\",\"duration\":\"368.169796\",\"format_long_name\":\"MP2/3 (MPEG audio layer 2/3)\",\"format_name\":\"mp3\",\"nb_streams\":1,\"size\":\"2945609\",\"start_time\":\"0.025057\",\"tags\":{}},\"subtitle\":null,\"video\":null}",
+              "scope": "",
+              "mp3code": -1,
+              "filekey": "edx/course-v2:Unipus+X006+20220728/resource/audio/a2c6ea2cecc027df16bed1de6e5c75f8af17854b_96k.mp3",
+              "userid": "resource",
+              "pubtime": "2022-08-23 18:08:50"}],
+   "code": 200}
+#+end_src
+* Initial Setup
+#+begin_src emacs-lisp
+  (use-package org-tree-slide
+    :custom
+    (org-image-actual-width nil))
+#+end_src
