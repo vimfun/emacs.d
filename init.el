@@ -185,6 +185,8 @@
   :config
   (show-paren-mode +1))
 
+(use-package grep-a-lot)
+
 (use-package elec-pair
   :config
   (electric-pair-mode +1))
@@ -309,7 +311,7 @@ Start `ielm' if it's not already running."
 (use-package leuven-theme)
 (use-package moe-theme)
 
-(load-theme 'wheatgrass)
+; (load-theme 'moe-light)
 
 (use-package jq-mode
   :config
@@ -408,19 +410,18 @@ Start `ielm' if it's not already running."
   :config
   (diminish 'hs-minor-mode))
 
+(defun evil-mode-hook-fn ()
+  (evil-local-mode)
+                                        ; (setq truncate-lines t)
+                                        ; (visual-line-mode t)
+  (setq display-line-numbers 'visual)
+  (setq evil-symbol-word-search t))
+
 (use-package evil
   :bind (("C-z" . evil-local-mode))
   :config
-  (add-hook 'text-mode-hook (lambda ()
-                              (evil-local-mode)
-                              (setq truncate-lines t)
-                              (setq display-line-numbers 'visual)
-                              (setq evil-symbol-word-search t)))
-  (add-hook 'prog-mode-hook (lambda ()
-                              (evil-local-mode)
-                              (setq truncate-lines t)
-                              (setq display-line-numbers 'visual)
-                              (setq evil-symbol-word-search t))))
+  (add-hook 'text-mode-hook 'evil-mode-hook-fn)
+  (add-hook 'prog-mode-hook 'evil-mode-hook-fn))
 
 (use-package evil-surround
   :after evil
@@ -468,6 +469,9 @@ Start `ielm' if it's not already running."
 (use-package ob-go)
 (use-package ob-prolog)
 (use-package ob-rust)
+
+(use-package docker)
+(use-package dockerfile-mode)
 
 (use-package counsel-jq)
 
@@ -570,7 +574,8 @@ Start `ielm' if it's not already running."
   :bind (
          ;; C-x bindings (ctl-x-map)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x b" . counsel-switch-buffer)
+
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ;; Custom M-# bindings for fast register access
@@ -711,6 +716,7 @@ Start `ielm' if it's not already running."
 (use-package ace-window
   :config
   (global-set-key (kbd "s-w") 'ace-window)
+  (global-set-key (kbd "M-o") 'ace-window)
   (global-set-key [remap other-window] 'ace-window))
 
 ;; FIXME: Figure out why the vterm module stopped compiling properly
@@ -756,5 +762,82 @@ Start `ielm' if it's not already running."
 ; (use-package helm-lsp)
 ; (use-package helm :config (helm-mode))
 ; (use-package lsp-treemacs)
+(use-package fzf
+  :bind (("C-c C-f" . fzf))
+  :config
+  (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
+        fzf/executable "fzf"
+        fzf/git-grep-args "-i --line-number %s"
+        ;; command used for `fzf-grep-*` functions
+        ;; example usage for ripgrep:
+        ;; fzf/grep-command "rg --no-heading -nH"
+        fzf/grep-command "grep -nrH"
+        ;; If nil, the fzf buffer will appear at the top of the window
+        fzf/position-bottom t
+        fzf/window-height 15)
+  )
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("7a8206a977c612016094e6390de94f6af98c3a4adc5b3561f56376730b98af9e" default))
+ '(helm-minibuffer-history-key "M-p")
+ '(org-plantuml-executable-args '("-headless -charset UTF-8"))
+ '(package-selected-packages
+   '(grep-a-lot fzf cider dockerfile-mode counsel zop-to-char zenburn-theme yaml-mode which-key web-mode volatile-highlights visual-fill-column utop use-package undo-tree typescript-mode super-save slack selectrum-prescient rust-mode ranger rainbow-mode rainbow-delimiters pt projectile powerline plantuml-mode org-tree-slide org-superstar org-super-agenda org-present ob-typescript ob-rust ob-restclient ob-prolog ob-ipython ob-graphql ob-go ob-elixir ob-deno multi-vterm move-text moe-theme merlin magit lsp-ui lsp-java leuven-theme keycast jq-mode inf-ruby inf-clojure imenu-anywhere hl-todo helm-lsp haskell-mode gnuplot-mode gnuplot git-timemachine gif-screencast flycheck-joker flycheck-eldev expand-region exec-path-from-shell evil-surround evil-collection erlang elixir-mode elisp-slime-nav eglot easy-kill diminish diff-hl crux counsel-jq consult company command-log-mode color-theme-sanityinc-solarized clj-refactor cask-mode anzu ag afternoon-theme adoc-mode 2048-game))
+ '(safe-local-variable-values
+   '((eval define-clojure-indent
+           (l/matcha
+            '(1
+              (:defn)))
+           (l/matche
+            '(1
+              (:defn)))
+           (p\.types/def-abstract-type
+            '(1
+              (:defn)))
+           (p\.types/defprotocol+
+            '(1
+              (:defn)))
+           (p\.types/defrecord+
+            '(2 nil nil
+                (:defn)))
+           (p\.types/deftype+
+            '(2 nil nil
+                (:defn)))
+           (p/def-map-type
+            '(2 nil nil
+                (:defn)))
+           (p/defprotocol+
+            '(1
+              (:defn)))
+           (p/defrecord+
+            '(2 nil nil
+                (:defn)))
+           (p/deftype+
+            '(2 nil nil
+                (:defn)))
+           (tools\.macro/macrolet
+            '(1
+              ((:defn))
+              :form)))
+     (eval put 'p\.types/defprotocol+ 'clojure-doc-string-elt 2)
+     (eval put 's/defn 'clojure-doc-string-elt 2)
+     (eval put 'setting/defsetting 'clojure-doc-string-elt 2)
+     (eval put 'defsetting 'clojure-doc-string-elt 2)
+     (eval put 'api/defendpoint-async 'clojure-doc-string-elt 3)
+     (eval put 'api/defendpoint 'clojure-doc-string-elt 3)
+     (eval put 'define-premium-feature 'clojure-doc-string-elt 2)
+     (eval put 'defendpoint-async 'clojure-doc-string-elt 3)
+     (eval put 'defendpoint 'clojure-doc-string-elt 3)
+     (ftf-project-finders ftf-get-top-git-dir))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
